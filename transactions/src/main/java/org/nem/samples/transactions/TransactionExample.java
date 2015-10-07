@@ -46,7 +46,7 @@ public class TransactionExample {
 			"66b2aaef981c06a293179be916f5c405fb4376a7d306d55587ad9e51c2143376"
 	);
 
-	// The accounts
+	// The accounts. Each account has approximately 1 million XEM balance.
 	private static final List<Account> ACCOUNTS = PRIVATE_KEYS_HEX.stream()
 			.map(PrivateKey::fromHexString)
 			.map(pk -> new Account(new KeyPair(pk)))
@@ -58,7 +58,9 @@ public class TransactionExample {
 		System.exit(1);
 	}
 
-
+	// This method initiates 10 random transfer transactions between the accounts.
+	// It uses the SleepFuture to create a delay of 1000ms between two transactions.
+	// If a node is flooded with transactions too hard, the ddos protection will trigger.
 	private static void sendSomeXem() {
 		// do some random transfers between the accounts
 		for (int i = 0; i < 10; i++) {
