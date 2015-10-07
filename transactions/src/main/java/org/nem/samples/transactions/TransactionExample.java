@@ -53,7 +53,7 @@ public class TransactionExample {
 			.collect(Collectors.toList());
 
 	public static void main(String[] args) {
-		//sendSomeXem();
+		sendSomeXem();
 		LOGGER.info("finished");
 	}
 
