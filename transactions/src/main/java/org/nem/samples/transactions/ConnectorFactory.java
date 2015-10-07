@@ -7,7 +7,7 @@ import org.nem.core.model.Account;
 /**
  * A simple NIS connector.
  */
-public class SimpleNisConnector {
+public class ConnectorFactory {
 	private static final HttpMethodClient<ErrorResponseDeserializerUnion> CLIENT = createHttpMethodClient();
 
 	public static DefaultAsyncNemConnector<NisApiId> createConnector() {

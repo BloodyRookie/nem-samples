@@ -24,7 +24,7 @@ public class TransactionExample {
 	private static final Logger LOGGER = Logger.getLogger(TransactionExample.class.getName());
 	private static final TimeProvider TIME_PROVIDER = new SystemTimeProvider();
 	private static final NodeEndpoint MIJIN_NODE_ENDPOINT = new NodeEndpoint("http", <ask_dev_team_for_ip>, 7895);
-	private static final DefaultAsyncNemConnector<NisApiId> CONNECTOR = SimpleNisConnector.createConnector();
+	private static final DefaultAsyncNemConnector<NisApiId> CONNECTOR = ConnectorFactory.createConnector();
 	private static final SecureRandom RANDOM = new SecureRandom();
 
 	// Choose mijin network
@@ -55,6 +55,7 @@ public class TransactionExample {
 	public static void main(String[] args) {
 		sendSomeXem();
 		LOGGER.info("finished");
+		System.exit(1);
 	}
 
 
@@ -122,7 +123,7 @@ public class TransactionExample {
 				recipient,                        // recipient
 				Amount.fromMicroNem(amount),      // amount in micro xem
 				null);                            // attachment (message, mosaics)
-		transaction.setFee(Amount.fromNem(200));
+		transaction.setFee(Amount.fromNem(10));
 		transaction.setDeadline(timeInstant.addHours(23));
 		transaction.sign();
 		return transaction;
