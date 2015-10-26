@@ -21,7 +21,7 @@
     </repositories>
 
     <properties>
-        <nemcore.version>0.6.56-BETA</nemcore.version>
+        <nemcore.version>0.6.58-BETA</nemcore.version>
         <nem-code-base>http://bob.nem.ninja/webstart</nem-code-base>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

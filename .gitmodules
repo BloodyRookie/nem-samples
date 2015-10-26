@@ -1,0 +1,3 @@
+[submodule "nem-core"]
+	path = nem-core
+	url = git@github.com:NewEconomyMovement/nem.core.git
