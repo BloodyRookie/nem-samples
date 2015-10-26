@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * Sample console application showing how to provision a namespace.
  */
 public class ProvisionNamespaceExample {
-	private static final Logger LOGGER = Logger.getLogger(TransactionExample.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ProvisionNamespaceExample.class.getName());
 
 	// Choose mijin network
 	static {

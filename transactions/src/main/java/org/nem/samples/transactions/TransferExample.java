@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 /**
  * Sample console application showing how to create transactions and publish them to the mijin network.
  */
-public class TransactionExample {
-	private static final Logger LOGGER = Logger.getLogger(TransactionExample.class.getName());
+public class TransferExample {
+	private static final Logger LOGGER = Logger.getLogger(TransferExample.class.getName());
 	private static final SecureRandom RANDOM = new SecureRandom();
 
 	// Choose mijin network
