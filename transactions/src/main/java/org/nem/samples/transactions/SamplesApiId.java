@@ -11,7 +11,12 @@ public enum SamplesApiId implements ApiId {
 	/**
 	 * The /namespace API
 	 */
-	NIS_REST_NAMESPACE("/namespace");
+	NIS_REST_NAMESPACE("/namespace"),
+
+	/**
+	 * The /mosaic/definition API
+	 */
+	NIS_REST_MOSAIC_DEFINITION("/mosaic/definition");
 
 	private final String value;
 

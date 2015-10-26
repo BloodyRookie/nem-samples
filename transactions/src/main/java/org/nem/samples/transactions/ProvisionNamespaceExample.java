@@ -17,6 +17,9 @@ import java.util.logging.Logger;
 
 /**
  * Sample console application showing how to provision a namespace.
+ * This code is provided to demonstrate basic usage of nem core.
+ * For a more complete documentation of the API used see
+ * http://bob.nem.ninja/docs
  */
 public class ProvisionNamespaceExample {
 	private static final Logger LOGGER = Logger.getLogger(ProvisionNamespaceExample.class.getName());

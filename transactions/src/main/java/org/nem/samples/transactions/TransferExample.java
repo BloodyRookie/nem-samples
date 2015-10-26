@@ -19,6 +19,9 @@ import java.util.stream.Collectors;
 
 /**
  * Sample console application showing how to create transactions and publish them to the mijin network.
+ * This code is provided to demonstrate basic usage of nem core.
+ * For a more complete documentation of the API used see
+ * http://bob.nem.ninja/docs
  */
 public class TransferExample {
 	private static final Logger LOGGER = Logger.getLogger(TransferExample.class.getName());
