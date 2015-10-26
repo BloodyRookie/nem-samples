@@ -159,10 +159,10 @@ public class MosaicDefinitionCreationExample {
 
 		// Optionally a levy can be supplied. It is allowed to be null.
 		final MosaicLevy levy = new MosaicLevy(
-				MosaicTransferFeeType.Absolute, // levy specfies an absolute value
+				MosaicTransferFeeType.Absolute, // levy specifies an absolute value
 				creator,                        // levy is send to the creator
 				MosaicConstants.MOSAIC_ID_XEM,  // levy is paid in XEM
-				Quantity.fromValue(1000)        // Each transfer of the mosaic will transfer 1000 XEM
+				Quantity.fromValue(1000)        // Each transfer of the mosaic will transfer 1000 micro XEM
 				                                // from the mosaic sender to the recipient (here the creator)
 		);
 
