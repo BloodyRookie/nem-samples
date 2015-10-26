@@ -3,6 +3,7 @@ package org.nem.samples.transactions;
 import org.nem.core.connect.*;
 import org.nem.core.connect.client.*;
 import org.nem.core.model.Account;
+import org.nem.core.node.ApiId;
 
 /**
  * A simple NIS connector.
@@ -10,8 +11,8 @@ import org.nem.core.model.Account;
 public class ConnectorFactory {
 	private static final HttpMethodClient<ErrorResponseDeserializerUnion> CLIENT = createHttpMethodClient();
 
-	public static DefaultAsyncNemConnector<NisApiId> createConnector() {
-		final DefaultAsyncNemConnector<NisApiId> connector = new DefaultAsyncNemConnector<>(
+	public static DefaultAsyncNemConnector<ApiId> createConnector() {
+		final DefaultAsyncNemConnector<ApiId> connector = new DefaultAsyncNemConnector<>(
 				CLIENT,
 				r -> { throw new RuntimeException(); });
 		connector.setAccountLookup(Account::new);

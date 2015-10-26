@@ -7,7 +7,7 @@ import org.nem.core.crypto.*;
 import org.nem.core.model.*;
 import org.nem.core.model.ncc.*;
 import org.nem.core.model.primitive.Amount;
-import org.nem.core.node.NodeEndpoint;
+import org.nem.core.node.*;
 import org.nem.core.serialization.*;
 import org.nem.core.time.*;
 
@@ -22,9 +22,6 @@ import java.util.stream.Collectors;
  */
 public class TransactionExample {
 	private static final Logger LOGGER = Logger.getLogger(TransactionExample.class.getName());
-	private static final TimeProvider TIME_PROVIDER = new SystemTimeProvider();
-	private static final NodeEndpoint MIJIN_NODE_ENDPOINT = new NodeEndpoint("http", <ask_dev_team_for_ip>, 7895);
-	private static final DefaultAsyncNemConnector<NisApiId> CONNECTOR = ConnectorFactory.createConnector();
 	private static final SecureRandom RANDOM = new SecureRandom();
 
 	// Choose mijin network
@@ -74,13 +71,13 @@ public class TransactionExample {
 
 	private static void createAndSend(final Account sender, final Account recipient, final long amount) {
 		final Transaction transaction = createTransaction(
-				TIME_PROVIDER.getCurrentTime(),
+				Globals.TIME_PROVIDER.getCurrentTime(),
 				sender,
 				recipient,
 				amount);
 		final byte[] data = BinarySerializer.serializeToBytes(transaction.asNonVerifiable());
 		final RequestAnnounce request = new RequestAnnounce(data, transaction.getSignature().getBytes());
-		final CompletableFuture<Deserializer> future = send(MIJIN_NODE_ENDPOINT, request);
+		final CompletableFuture<Deserializer> future = send(Globals.MIJIN_NODE_ENDPOINT, request);
 		future.thenAccept(d -> {
 					final NemAnnounceResult result = new NemAnnounceResult(d);
 					switch (result.getCode()) {
@@ -107,7 +104,7 @@ public class TransactionExample {
 	}
 
 	private static CompletableFuture<Deserializer> send(final NodeEndpoint endpoint, final RequestAnnounce request) {
-		return CONNECTOR.postAsync(
+		return Globals.CONNECTOR.postAsync(
 				endpoint,
 				NisApiId.NIS_REST_TRANSACTION_ANNOUNCE,
 				new HttpJsonPostRequest(request));
