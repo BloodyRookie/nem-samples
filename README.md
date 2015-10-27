@@ -3,6 +3,7 @@ Collection of sample code showing how to do simple tasks.
 
 ## installing submodules
 git submodule init
+
 git submodule update
 
 ## update nis ip
