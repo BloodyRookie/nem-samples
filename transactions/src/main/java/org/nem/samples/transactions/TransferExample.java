@@ -5,8 +5,10 @@ import org.nem.core.connect.HttpJsonPostRequest;
 import org.nem.core.connect.client.NisApiId;
 import org.nem.core.crypto.*;
 import org.nem.core.model.*;
+import org.nem.core.model.mosaic.*;
+import org.nem.core.model.namespace.NamespaceId;
 import org.nem.core.model.ncc.*;
-import org.nem.core.model.primitive.Amount;
+import org.nem.core.model.primitive.*;
 import org.nem.core.node.NodeEndpoint;
 import org.nem.core.serialization.*;
 import org.nem.core.time.TimeInstant;
@@ -54,6 +56,7 @@ public class TransferExample {
 
 	public static void main(String[] args) {
 		sendSomeXem();
+		sendSomeMosaics();
 		LOGGER.info("finished");
 		System.exit(1);
 	}
@@ -72,32 +75,96 @@ public class TransferExample {
 		}
 	}
 
-	private static void createAndSend(final Account sender, final Account recipient, final long amount) {
+	// This method initiates 10 random mosaic transfer transactions from account 0 to a random account.
+	// Account 0 is the creator of the mosaic with id "examples.mijin * jpy" and owns enough of that mosaic.
+	private static void sendSomeMosaics() {
+		// do some random transfers between the accounts
+		final MosaicId mosaicId = new MosaicId(new NamespaceId("examples.mijin"), "jpy");
+		for (int i = 0; i < 10; i++) {
+			// send one transaction every second
+			final Account sender = ACCOUNTS.get(0);
+			final Account recipient = ACCOUNTS.get(1 + RANDOM.nextInt(9));
+			final long amount = RANDOM.nextInt(1000);
+			final Mosaic mosaic = new Mosaic(mosaicId, Quantity.fromValue(amount));
+			final TransferTransactionAttachment attachment = new TransferTransactionAttachment();
+			attachment.addMosaic(mosaic);
+			SleepFuture.create(1000).thenAccept(v -> createAndSend(sender, recipient, 1000000, attachment)).join();
+		}
+	}
+
+	private static void createAndSend(
+			final Account sender,
+			final Account recipient,
+			final long amount) {
 		final Transaction transaction = createTransaction(
 				Globals.TIME_PROVIDER.getCurrentTime(),
 				sender,
 				recipient,
-				amount);
+				amount,
+				null);
 		final byte[] data = BinarySerializer.serializeToBytes(transaction.asNonVerifiable());
 		final RequestAnnounce request = new RequestAnnounce(data, transaction.getSignature().getBytes());
 		final CompletableFuture<Deserializer> future = send(Globals.MIJIN_NODE_ENDPOINT, request);
 		future.thenAccept(d -> {
-					final NemAnnounceResult result = new NemAnnounceResult(d);
-					switch (result.getCode()) {
-						case 1: LOGGER.info(String.format("successfully send %d micro xem from %s to %s",
-								amount,
-								sender.getAddress(),
-								recipient.getAddress()));
-							break;
-						default:
-							LOGGER.warning(String.format("could not send xem from %s to %s, reason: %s",
-									sender.getAddress(),
-									recipient.getAddress(),
-									result.getMessage()));
-					}
-				})
+			final NemAnnounceResult result = new NemAnnounceResult(d);
+			switch (result.getCode()) {
+				case 1: LOGGER.info(String.format("successfully send %d micro xem from %s to %s",
+						amount,
+						sender.getAddress(),
+						recipient.getAddress()));
+					break;
+				default:
+					LOGGER.warning(String.format("could not send xem from %s to %s, reason: %s",
+							sender.getAddress(),
+							recipient.getAddress(),
+							result.getMessage()));
+			}
+		})
 				.exceptionally(e -> {
 					LOGGER.warning(String.format("could not send xem from %s to %s, reason: %s",
+							sender.getAddress(),
+							recipient.getAddress().getEncoded(),
+							e.getMessage()));
+					return null;
+				})
+				.join();
+	}
+
+	private static void createAndSend(
+			final Account sender,
+			final Account recipient,
+			final long amount,
+			final TransferTransactionAttachment attachment) {
+		final Transaction transaction = createTransaction(
+				Globals.TIME_PROVIDER.getCurrentTime(),
+				sender,
+				recipient,
+				amount,
+				attachment);
+		final Mosaic mosaic = attachment.getMosaics().stream().findFirst().get();
+		final byte[] data = BinarySerializer.serializeToBytes(transaction.asNonVerifiable());
+		final RequestAnnounce request = new RequestAnnounce(data, transaction.getSignature().getBytes());
+		final CompletableFuture<Deserializer> future = send(Globals.MIJIN_NODE_ENDPOINT, request);
+		future.thenAccept(d -> {
+			final NemAnnounceResult result = new NemAnnounceResult(d);
+			switch (result.getCode()) {
+				case 1: LOGGER.info(String.format("successfully send %d %s from %s to %s",
+						mosaic.getQuantity().getRaw(),
+						mosaic.getMosaicId(),
+						sender.getAddress(),
+						recipient.getAddress()));
+					break;
+				default:
+					LOGGER.warning(String.format("could not send %s from %s to %s, reason: %s",
+							mosaic.getMosaicId(),
+							sender.getAddress(),
+							recipient.getAddress(),
+							result.getMessage()));
+			}
+		})
+				.exceptionally(e -> {
+					LOGGER.warning(String.format("could not send %s from %s to %s, reason: %s",
+							mosaic.getMosaicId(),
 							sender.getAddress(),
 							recipient.getAddress().getEncoded(),
 							e.getMessage()));
@@ -117,15 +184,16 @@ public class TransferExample {
 			final TimeInstant timeInstant,
 			final Account sender,
 			final Account recipient,
-			final long amount) {
+			final long amount,
+			final TransferTransactionAttachment attachment) {
 		final TransferTransaction transaction = new TransferTransaction(
-				1,                                // version
+				2,                                // version
 				timeInstant,                      // time instant
 				sender,                           // sender
 				recipient,                        // recipient
 				Amount.fromMicroNem(amount),      // amount in micro xem
-				null);                            // attachment (message, mosaics)
-		transaction.setFee(Amount.fromNem(10));
+				attachment);                      // attachment (message, mosaics)
+		transaction.setFee(Amount.fromNem(200));
 		transaction.setDeadline(timeInstant.addHours(23));
 		transaction.sign();
 		return transaction;

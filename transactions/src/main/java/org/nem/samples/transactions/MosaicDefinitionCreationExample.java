@@ -153,8 +153,8 @@ public class MosaicDefinitionCreationExample {
 		// This shows how properties of the mosaic can be chosen.
 		// If no custom properties are supplied default values are taken.
 		final Properties properties = new Properties();
-		properties.put("initialSupply", Long.toString(1000000));
-		properties.put("divisibility", Long.toString(1));
+		properties.put("initialSupply", Long.toString(1000000000));
+		properties.put("divisibility", Long.toString(2));
 		properties.put("supplyMutable", Boolean.toString(true));
 		properties.put("transferable", Boolean.toString(true));
 		final MosaicProperties mosaicProperties = new DefaultMosaicProperties(properties);

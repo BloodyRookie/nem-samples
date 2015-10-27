@@ -38,6 +38,7 @@ public class MosaicSupplyChangeExample {
 	public static void main(String[] args) {
 		changeMosaicSupply();
 		LOGGER.info("finished");
+		System.exit(1);
 	}
 
 	private static void changeMosaicSupply() {
