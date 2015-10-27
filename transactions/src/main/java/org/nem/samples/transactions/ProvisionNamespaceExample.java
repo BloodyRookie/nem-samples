@@ -86,15 +86,17 @@ public class ProvisionNamespaceExample {
 							success[0] = true;
 							break;
 						default:
-							LOGGER.warning(String.format("could not provisioned new namespace %s for owner %s",
+							LOGGER.warning(String.format("could not provisioned new namespace %s for owner %s, reason: %s",
 									null == parent ? newPart.toString() : parent.concat(newPart).toString(),
-									sender.getAddress()));
+									sender.getAddress(),
+									result.getMessage()));
 					}
 				})
 				.exceptionally(e -> {
-					LOGGER.warning(String.format("could not provisioned new namespace %s for owner %s",
+					LOGGER.warning(String.format("could not provisioned new namespace %s for owner %s, reason: %s",
 							null == parent ? newPart.toString() : parent.concat(newPart).toString(),
-							sender.getAddress()));
+							sender.getAddress(),
+							e.getMessage()));
 					return null;
 				})
 				.join();

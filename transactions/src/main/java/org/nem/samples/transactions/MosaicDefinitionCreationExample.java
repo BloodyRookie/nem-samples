@@ -101,15 +101,17 @@ public class MosaicDefinitionCreationExample {
 					success[0] = true;
 					break;
 				default:
-					LOGGER.warning(String.format("could not create mosaic definition %s for owner %s",
+					LOGGER.warning(String.format("could not create mosaic definition %s for owner %s, reason: %s",
 							transaction.getMosaicDefinition().getId(),
-							sender.getAddress()));
+							sender.getAddress(),
+							result.getMessage()));
 			}
 		})
 				.exceptionally(e -> {
-					LOGGER.warning(String.format("could not create mosaic definition %s for owner %s",
+					LOGGER.warning(String.format("could not create mosaic definition %s for owner %s, reason: %s",
 							transaction.getMosaicDefinition().getId(),
-							sender.getAddress()));
+							sender.getAddress(),
+							e.getMessage()));
 					return null;
 				})
 				.join();

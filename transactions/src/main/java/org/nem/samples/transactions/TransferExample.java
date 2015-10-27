@@ -2,14 +2,14 @@ package org.nem.samples.transactions;
 
 import org.nem.core.async.SleepFuture;
 import org.nem.core.connect.HttpJsonPostRequest;
-import org.nem.core.connect.client.*;
+import org.nem.core.connect.client.NisApiId;
 import org.nem.core.crypto.*;
 import org.nem.core.model.*;
 import org.nem.core.model.ncc.*;
 import org.nem.core.model.primitive.Amount;
-import org.nem.core.node.*;
+import org.nem.core.node.NodeEndpoint;
 import org.nem.core.serialization.*;
-import org.nem.core.time.*;
+import org.nem.core.time.TimeInstant;
 
 import java.security.SecureRandom;
 import java.util.*;
@@ -93,7 +93,7 @@ public class TransferExample {
 							LOGGER.warning(String.format("could not send xem from %s to %s, reason: %s",
 									sender.getAddress(),
 									recipient.getAddress(),
-									result.toString()));
+									result.getMessage()));
 					}
 				})
 				.exceptionally(e -> {
